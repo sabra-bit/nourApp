@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Page Title</title>
+<link rel="icon" type="image/x-icon"  href="{{ url_for('static', filename='img/iconx.jpg') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+<style>
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+  padding: 16px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #c0c0c0;
+  color: white;
+}
+
+label {
+  font-family: sans-serif;
+  font-size: 1rem;
+  padding-right: 10px;
+}
+
+select {
+  font-size: 0.9rem;
+  padding: 2px 5px;
+}
+
+.top-buffer { margin:20px; }
+
+</style>
+</head>
+<body>
+
+
+  <div class="topnav">
+    <a class="openbtn" onclick="openNav()">☰ Menu</a> 
+    <a class="active" href="/">Generate Training Plan</a>
+    
+  </div>
+  
+  
+
+<div id="mySidebar" class="sidebar">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+  <a href="/">Generate Training Plan</a>
+  <a href="/setting">Setting</a>
+  
+</div>
+
+<div id="main">
+  <div class="container">
+    <div class="container">
+
+      <div class="card" >
+    <div class="card-body">
+      <center> <h5 class="card-title"> Generate Training Plan </h5> </center>
+      <form action="/genrate" method="POST">
+        
+
+        <div class="row top-buffer">
+          <div class="col-sm-5">
+            
+            <label for="organization">organization:</label>
+
+            <select name="organization" id="organization" class="form-select" onchange="orgData();" aria-label="Default select example">
+              <option value="any">--choose organization--</option>
+              {% if org  %}
+                {% for o  in org %}
+              <option value="{{o[0]}}">{{o[0]}}</option>
+              {% endfor %}
+              {% endif %}
+            </select>
+          </div>  
+
+          <div class="col-sm-5">
+            <label for="department">department:</label>
+
+            <select name="department" id="department" class="form-select" aria-label="Default select example">
+              <option value="any">--choose department--</option>
+             
+              
+            </select>
+          </div>
+          
+        </div>
+
+
+
+
+        <div class="row top-buffer">
+          <div class="col-sm-5">
+            
+            <label for="sector">choose sector:</label>
+
+            <select name="sector" id="sector" class="form-select" aria-label="Default select example">
+              <option value="any">--choose sector--</option>
+              
+            
+            </select>
+          </div>  
+
+          <div class="col-sm-5">
+            <label for="unit">choose unit:</label>
+
+            <select name="unit" id="unit" class="form-select" aria-label="Default select example">
+              <option value="any">--choose unit--</option>
+              
+            
+            </select>
+          </div>
+          
+        </div>
+
+
+
+
+        <div class="row top-buffer">
+          <div class="col-sm-5">
+            
+            <label for="degree">degree:</label>
+
+            <select  id="degree" name = "degree" class="form-select" aria-label="Default select example">
+              <option value="any">--choose degree--</option>
+              <option value="undergraduate">undergraduate</option>
+              <option value="graduate">graduate</option>
+              <option value="Bachelor's degree">Bachelor's degree</option>
+              <option value="Master's degree">Master's degree</option>
+              <option value="Doctoral degree">Doctoral degree</option>
+              
+             
+            </select>
+          </div>  
+
+          <div class="col-sm-5" >
+            <label >age:</label>
+            <div class="input-group  "  >
+            
+              <span class="input-group-text " id="basic-addon1">from:</span>
+            <input class="form-select" aria-label="Default select example" type="number" id="start" name="start" min="0" max="100" value="20" size="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+            
+            <span class="input-group-text " id="basic-addon1">to:</span>
+            <input  class="form-select   " aria-label="Default select example" type="number" id="end" name="end" min="0" max="100" value="40" size="3" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+            
+          
+          </div>
+            
+          </div>
+          
+        </div>
+
+
+        <div class="row top-buffer">
+          <div class="col-sm-5">
+            
+            <label >Jop:</label>
+            <div class="input-group  "  >
+            
+              <span class="input-group-text " >jop name:</span>
+            <input class="form-control" aria-label="Default select example" type="text" id="jopName" name="jopName"   placeholder="engineer" required>
+            
+            <span class="input-group-text " >jop level:</span>
+              <select name="jopLevel" id="jopLevel" class="form-select" aria-label="Default select example">
+                <option value="any">--jop level--</option>
+                <option value="level1">level1</option>
+                <option value="level2">level2</option>
+                <option value="level3">level3</option>
+              
+              </select>
+          
+             </div>
+
+          </div>  
+
+          <div class="col-sm-5">
+            <label for="prerequisite">prerequisite course:</label>
+
+            <input id="prerequisite" name ="prerequisite" placeholder="course1-course2" value="any"  type="text"  class="form-control" aria-label="Default select example">
+              
+            
+            </select>
+          </div>
+          
+        </div>
+        <center><button class="btn btn-primary mb-3"  type="submit">Generate</button></center>
+      </form>  
+      </div>
+  
+</div>
+
+</div>
+<br><br>
+
+<div class="container">
+
+  <div class="card" >
+<div class="card-body">
+  <center> <h5 class="card-title"> Add custom plan </h5> </center>
+
+
+  <div class="row top-buffer">
+    <div class="col-sm-5">
+      
+      <label for="sector">knowledg domain:</label>
+
+      <select name="knowledgx" id="knowledgx" class="form-select" aria-label="Default select example" onchange="courseData();">
+        <option value="any">--choose knowledg domain--</option>
+        {% for k  in know %}
+        <option value="{{k[1]}}">{{k[1]}}</option>
+        {% endfor %}
+        
+      
+      </select>
+    </div>  
+
+    <div class="col-sm-5">
+      <label for="unit">subject:</label>
+
+      <select name="subjectx" id="subjectx" class="form-select" aria-label="Default select example">
+        
+        
+      
+      </select>
+    </div>
+    
+  </div>
+  <center><button class="btn btn-primary mb-3" onclick = "addCustom();"  >Add</button></center>
+
+
+</div>
+  
+</div>
+
+</div>
+
+<br><br>
+
+{% if data %}
+<div class="container">
+  
+<div class="card" >
+  <div class="card-body">
+    <h5 class="card-title">Generated plan</h5>
+    
+    
+
+    <table class="table table-striped"  id="myTable" >
+      <thead>
+      <tr>
+          <th>#</th>
+          <th>subject</th>
+          <th>study type</th>
+          <th>course houre</th>
+          <th>prerequisite course</th>
+
+         
+      </tr>
+
+      </thead>
+
+      <tbody>
+      
+          
+
+      {% for o  in data  %}
+          <tr>
+          <td>{{loop.index}}</td>
+          <td>{{o[1]}}</td>
+          <td>{{o[3]}}</td>
+          <td>{{o[7]}}</td>
+          <td>{{o[8]}}</td>
+          
+          </tr>
+      {% endfor %}
+
+          
+      </tbody>
+  </table>
+
+
+  </div>
+</div>
+</div>
+
+{% else %}
+<div class="container">
+  
+  <div class="card" >
+    <div class="card-body">
+      <h5 class="card-title">Generated plan</h5>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      
+  
+      <table class="table table-striped"  id="myTable" >
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>subject</th>
+            <th>study type</th>
+            <th>course houre</th>
+            <th>prerequisite course</th>
+  
+           
+        </tr>
+  
+        </thead>
+  
+        <tbody>
+        
+            
+  
+        
+  
+            
+        </tbody>
+    </table>
+  
+    
+    </div>
+
+    <center> employee data </center>
+    <center>
+
+      <div class="input-group">
+        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick="location.reload(); // well be update next">upload</button>
+      </div>
+    </center>
+  </div>
+  </div>
+
+{% endif %}
+
+
+
+
+
+  
+</div>
+
+<script>
+
+
+  function addCustom() {
+    var subjec = document.getElementById("subjectx").value.split('^');
+    
+
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(1);
+    var cell0 = row.insertCell(0);
+    var cell1 = row.insertCell(1);
+    var cell2 = row.insertCell(2);
+    var cell3 = row.insertCell(3);
+    var cell4 = row.insertCell(4);
+    cell0.innerHTML = "#";
+    cell1.innerHTML = subjec[0];
+    cell2.innerHTML = subjec[1];
+    cell3.innerHTML = subjec[2];
+    cell4.innerHTML = subjec[3];
+   console.log(subjec);
+  }
+
+
+
+  function courseData() {
+    var org = document.getElementById("knowledgx").value;
+    
+    
+    
+    const data = JSON.stringify({
+        'knowledg': org,
+        
+       
+        
+      })
+      
+      const xhr = new XMLHttpRequest()
+      xhr.withCredentials = true;
+      
+      xhr.addEventListener('readystatechange', function() {
+        if (this.readyState === this.DONE) {
+          console.log(this.responseText)
+          const obj = JSON.parse(this.responseText);
+         
+
+
+
+
+          var selectobjectunit = document.getElementById("subjectx");
+          deleteAllOptionsFromSelect(selectobjectunit);
+
+            
+
+          var department = [];
+         
+          
+          
+         
+          for (var i =0; i < obj.length; i++){
+            selectobjectunit.options[selectobjectunit.options.length] = new Option(obj[i][1], obj[i][1]+"^"+obj[i][3]+"^"+obj[i][7]+"^"+obj[i][8] );
+            
+            //department.push(obj[i][3]);
+           // sector.push(obj[i][2]);
+           // unit.push(obj[i][4]);
+          }
+        }
+      });
+      
+      xhr.open('POST', '/genrate/getData') ;
+      xhr.setRequestHeader('content-type', 'application/json')
+      xhr.send(data);
+    
+  
+  }
+  
+
+ 
+
+
+
+
+
+
+
+
+  function orgData() {
+    var org = document.getElementById("organization").value;
+    
+    
+    
+    const data = JSON.stringify({
+        'cours': org,
+        
+       
+        
+      })
+      
+      const xhr = new XMLHttpRequest()
+      xhr.withCredentials = true;
+      
+      xhr.addEventListener('readystatechange', function() {
+        if (this.readyState === this.DONE) {
+          console.log(this.responseText)
+          const obj = JSON.parse(this.responseText);
+         
+
+
+
+
+          var selectobjectunit = document.getElementById("unit");
+          deleteAllOptionsFromSelect(selectobjectunit);
+
+            var selectobjectsector = document.getElementById("sector");
+            deleteAllOptionsFromSelect(selectobjectsector);
+
+
+            var selectobjectdepartment = document.getElementById("department");
+            deleteAllOptionsFromSelect(selectobjectdepartment);
+
+          var department = [];
+          var sector = [];
+          var unit = [];
+          
+          selectobjectunit.options[selectobjectunit.options.length] = new Option('--any--', 'any');
+          selectobjectdepartment.options[selectobjectdepartment.options.length] = new Option('--any--', 'any');
+          selectobjectsector.options[selectobjectsector.options.length] = new Option('--any--', 'any');
+          for (var i =0; i < obj.length; i++){
+            selectobjectunit.options[selectobjectunit.options.length] = new Option(obj[i][4]+ obj[i][1], obj[i][4] );
+            selectobjectdepartment.options[selectobjectdepartment.options.length] = new Option(obj[i][3]+ obj[i][1], obj[i][3] );
+            selectobjectsector.options[selectobjectsector.options.length] = new Option(obj[i][2] + obj[i][1], obj[i][2] );
+            //department.push(obj[i][3]);
+           // sector.push(obj[i][2]);
+           // unit.push(obj[i][4]);
+          }
+        }
+      });
+      
+      xhr.open('POST', '/organization/getData') ;
+      xhr.setRequestHeader('content-type', 'application/json')
+      xhr.send(data);
+    
+  
+  }
+  
+
+  function deleteAllOptionsFromSelect(selectElement) {
+    while (selectElement.firstChild) {
+      selectElement.removeChild(selectElement.firstChild);
+    }
+  }
+
+
+
+function openNav() {
+  document.getElementById("mySidebar").style.width = "350px";
+  document.getElementById("main").style.marginLeft = "350px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+
+<script>
+  $(".chosen-select").chosen({
+    no_results_text: "Oops, nothing found!"
+  })
+function openNav() {
+  document.getElementById("mySidebar").style.width = "350px";
+  document.getElementById("main").style.marginLeft = "350px";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+<script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+</body>
+</html> 
